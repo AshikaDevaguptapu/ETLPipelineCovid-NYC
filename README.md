@@ -63,18 +63,18 @@ It then checks for null values if any and drops them.
 It adds load Date column with current date and time to indicate when the data has been downloaded and inserted into the database.
 I didn't see much advantage in scaling/normalizing the data w.r.to this use case.
 It returns the transformed data in the form of pandas dataframe
-#### Load:
+#### Load():
 This function takes tranformed data as input and creates a SQLite3 table. Basically converts data into structural format for further analysis.
 
 After loading the data, to verify, I have performed sql queries on the tables I have created and checked whether the results were as expected.
-#### getDataByCounty:
+#### getDataByCounty():
 This is a function to check whether the data was sucessfully ingested and the results were as exepected. So, I have extracted data using select query on the created database table of the particular county. It is compared against expected output. It returns success if the fetch from respective county is successfull otherwise it returns an execption.
 
 ### SchedulerFile.py
 This script will schedule your CovidETLPipeline.py to run automatically at 9:00 AM every day. If you want to check whether this has been done or not, you can change your system time respectively to 8:59 PM after running this file with out interrupting the CLI or terminal and wait for 1 minute to see the results of ETL.
 
 ### TestCases.py:
-This file checks all the test cases of the functions Extract, Transform, Load of the CovidETLPipeline.py file. It it outputs all three test cases as ok then your results are successful. 
+This file checks all the test cases of the functions Extract, Transform, Load of the CovidETLPipeline.py file. If all the testcases were successful , then it indicates that your python files are successful in building successful ETL pipeline concurrently.
 
 ### Some important Modules and packages that were used in the code:
 #### pandas: 
