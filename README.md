@@ -114,22 +114,22 @@ After downloading the image and yaml file, you should make a container out of th
 
                       docker-compose -f docker-compose-CeleryExecutor.yml up -d
                       
-Make sure that you have the celeryexecutor.yml file in the same forlder you run this command. Otherwise, specify the full path to celeryexecutor file.  -d specifies that this container will run in the background as a deamon. 
+Make sure that you have the celeryexecutor.yml file in the same folder you run this command. Otherwise, specify the full path to celeryexecutor file.  -d specifies that this container will run in the background as a deamon. 
 
 ### Step4: Check airflow on "localhost:8080"
 After running the image, you can check below command whether airflow was initiated or not. 
                       
                       docker container logs <containername/id>
 
-If you see airflow image in the container logs, it specifies that airflow is successful on your machine. Now, hit the url localhost:8080.  If airflow UI pops up, then you have sucessfully installed airflow on your system. 
+If you see airflow image in the container logs, it specifies that airflow is successfully installed on your machine. Now, hit the url localhost:8080 from your browser.  If airflow UI pops up, then you have sucessfully installed airflow on your system. 
 
 ### Step5: Check dags folder inside the container
 Now go inside the container with the command the below command.
                       
                       docker exec -it <containername/id> /bin/bash
 
-Cd into the directory dags in /usr/local/airflow/dags
-The detault $AIRFLOW_HOME is /usr/local/airflow. Here we need to write our dag py file to schedule our python code to run. 
+Navigate into the directory dags in /usr/local/airflow/dags
+The default $AIRFLOW_HOME is /usr/local/airflow. Here we need to write our dag py file to schedule our python code to run. 
 
 ### Step6: Write a dag file inside dags folder
 We need to write a dag file here. I have written the dag file to call my python script and I have scheduled it to run for 1 minute as sample. You can find my dag file here "ScheduleAirflowDag.py" and my python file here "CovidETLPipeline.py" in this repository.
@@ -139,17 +139,17 @@ Now go the url localhost:8080 and check whether you dag was reflected in the air
 task to run your individual tasks. You can also triger the total dag at once. 
 
 Now you can go to details to check whether your dag is successfully executed or not. 
-If it gives Success then you can go the logs to check your output. If failed, then you can also check the logs and see where you have gone wrong. 
+If it gives a Success message then you can go the logs to check your output. If failed, then you can also check the logs and see where you have gone wrong. 
 
 I was struck after this step, because my dag doesn't run my task after 1 iteration. So, I couldn't move further. I have changed the schedule_interval parameter 
 to run for 1 minute as a check, but no luck. It didn't work where as it works for schedule_interval="@once". Thus, changing the schedule_interval to "0 9 0 0 0" would satisfy the requirement. 
 
 #### Some errors and Fixes which I have come across:
-1) I have faced an error while executing my py file form dag. It said file not found every time I run my dag even though the file is found in the same path as
-mentioned in the dag. So, it took me a lot time to debug this and finally found that, airflow is checking for files present in the docker container of airflow not on our system. So, we should make sure that we login in to our webserver container and go inside /usr/local/airflow/dags and create our dag file and python file there and specify this path in our dag file. Otherwise, our system path is unknown to the container. So, our dag will not pick python file path. You can also mount your path to the container path or write a custom docker file to cpy your files on to container. But, you may face errors and missing of files when the containers are in running state. So, better option is to write these dag and python file by using vi inside the container in dags folder.
+1) I have faced an error while executing my py file form dag. It said "File Not Found" every time I run my dag even though the file exists in the path as
+mentioned in the dag. So, it took me a lot time to debug this and finally found that, airflow is checks for files present in the docker container of airflow but not on our machine. So, we should make sure that we login in to our webserver container and go inside /usr/local/airflow/dags and create our dag file and python file there and specify this path in our dag file. Otherwise, our system path is unknown to the container. So, our dag will not pick python file path. You can also mount your path to the container path or write a custom docker file to cpy your files on to container. But, you may face errors and missing of files when the containers are in running state. So, better option is to write these dag and python file by using vi inside the container in dags folder.
 
 2) You need to install all the dependencies inside your container like pip install pandas etc. You can also write a requirements.txt but, as my imports are less, 
-I have gone inside the container and installed all using pip. 
+I have installed all the dependecies using pip inside the container. 
 
 You can find the results of my ETL python code in Airflow in the images attached respectively in CovidwithAirflow folder. 
                                   
